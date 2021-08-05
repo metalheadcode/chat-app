@@ -5,7 +5,7 @@ import { useProfile } from '../../context/profile.context';
 const PublicRoute = ({ children, ...routeProps }) => {
   const { profile, isLoading } = useProfile();
 
-  if (profile && !isLoading) {
+  if (!profile && isLoading) {
     return <Redirect to="/" />;
   }
 
