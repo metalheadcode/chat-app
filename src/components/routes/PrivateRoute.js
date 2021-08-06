@@ -6,6 +6,7 @@ import { useProfile } from '../../context/profile.context';
 const PrivateRoute = ({ children, ...routeProps }) => {
   const { profile, isLoading } = useProfile();
 
+  // loading true, profile null
   if (isLoading && !profile) {
     return (
       <Container>
@@ -14,6 +15,7 @@ const PrivateRoute = ({ children, ...routeProps }) => {
     );
   }
 
+  // profile null and loading false
   if (!profile && !isLoading) {
     return <Redirect to="/signin" />;
   }

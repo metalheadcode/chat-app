@@ -8,28 +8,37 @@ export const ProfileProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('Start component mount');
-    auth.onAuthStateChanged(user => {
+    let userRef;
+    const authUnsub = auth.onAuthStateChanged(user => {
       if (user) {
-        database
-          .ref('profiles')
-          .child(user.uid)
-          .on('value', snap => {
-            const { name, createdAt } = snap.val();
-            const userData = {
-              name,
-              createdAt,
-              uid: user.uid,
-              email: user.email,
-            };
-            setProfile(userData);
-            setIsLoading(false);
-          });
+        userRef = database.ref('profiles').child(user.uid);
+        userRef.on('value', snap => {
+          const { name, createdAt } = snap.val();
+          const userData = {
+            name,
+            createdAt,
+            uid: user.uid,
+            email: user.email,
+          };
+          setProfile(userData);
+          setIsLoading(false);
+        });
       } else {
+        if (userRef) {
+          userRef.off();
+        }
         setProfile(null);
         setIsLoading(false);
       }
     });
+
+    return () => {
+      // unsubscribe the onAuthStateChanged
+      authUnsub();
+      if (userRef) {
+        userRef.off();
+      }
+    };
   }, []);
 
   return (
