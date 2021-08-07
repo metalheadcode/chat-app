@@ -1,20 +1,26 @@
 import React from 'react';
-import { Button, Drawer, Icon } from 'rsuite';
+import { Alert, Button, Drawer, Icon } from 'rsuite';
 import Dashboard from '.';
 import { useMediaqQueryChrome, useModalState } from '../../misc/custom-hooks';
+import { auth } from '../../misc/firebase';
 
 const DashboardToggle = () => {
   const { isOpen, open, close } = useModalState();
   const isMobile = useMediaqQueryChrome('(max-width: 992px)');
 
-  console.log(isMobile);
+  const signOutHandler = async () => {
+    await auth.signOut();
+    Alert.info('Signed Out', 4000);
+    close();
+  };
+
   return (
     <>
       <Button block color="blue" onClick={open}>
         <Icon icon="dashboard" /> Dashboard
       </Button>
       <Drawer full={isMobile} show={isOpen} onHide={close} placement="left">
-        <Dashboard />
+        <Dashboard signOutHandler={signOutHandler} />
       </Drawer>
     </>
   );
