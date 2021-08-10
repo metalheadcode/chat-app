@@ -7,3 +7,10 @@ export function getNameInitials(name) {
 
   return splitName[0][0];
 }
+
+// data here mean snap.val()
+export function transformToArray(data) {
+  return data ? Object.keys(data) : [];
+}
+
+// data here mean snap.val()
