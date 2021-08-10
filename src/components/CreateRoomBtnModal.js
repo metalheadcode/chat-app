@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import firebase from 'firebase';
 import {
   Alert,
@@ -31,9 +31,9 @@ const CreateRoomBtnModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef();
 
-  const onFormChange = value => {
+  const onFormChange = useCallback(value => {
     setFormValue(value);
-  };
+  }, []);
 
   // console.log(formRef.current.check());
 
