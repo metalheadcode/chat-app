@@ -35,19 +35,19 @@ const CreateRoomBtnModal = () => {
     setFormValue(value);
   }, []);
 
-  // console.log(formRef.current.check());
-
   const onSubmit = async () => {
     if (formRef.current.check()) {
       setIsLoading(true);
 
-      const newRoomData = {
-        ...formValue,
-        createdAt: firebase.database.ServerValue.TIMESTAMP,
-      };
-
       try {
-        await database.ref('rooms').push(newRoomData);
+        const databaseRef = database.ref('rooms');
+        const roomId = databaseRef.push().key;
+        const newRoomData = {
+          ...formValue,
+          id: roomId,
+          createdAt: firebase.database.ServerValue.TIMESTAMP,
+        };
+        await databaseRef.child(roomId).update(newRoomData);
         Alert.info(`${formValue.name} was created`, 4000);
         setFormValue(initialForm);
         setIsLoading(false);
