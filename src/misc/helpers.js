@@ -8,6 +8,16 @@ export function getNameInitials(name) {
   return splitName[0][0];
 }
 
+// snap.val() id is outside the object.
+// with this function we take them as our id
+export function transformToArrayWithId(data) {
+  return data
+    ? Object.keys(data).map(roomId => {
+        return { ...data[roomId] };
+      })
+    : [];
+}
+
 // data here mean snap.val()
 export function transformToArray(data) {
   return data ? Object.keys(data) : [];
