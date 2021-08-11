@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { database } from '../misc/firebase';
+import { transformToArrayWithId } from '../misc/helpers';
 
 const RoomsContext = createContext();
 
@@ -9,8 +10,8 @@ export const RoomsProvider = ({ children }) => {
   useState(() => {
     const roomsRef = database.ref('rooms');
     roomsRef.on('value', snap => {
-      const data = snap.val();
-      console.log(data);
+      const data = transformToArrayWithId(snap.val());
+      console.log('data from room context componentDidMount', data);
       setRooms(data);
     });
 
