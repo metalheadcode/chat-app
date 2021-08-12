@@ -5,8 +5,8 @@ import DashboardToggle from './dasboard.js/DashboardToggle';
 import ChatRoomList from './rooms/ChatRoomList';
 
 const Sidebar = () => {
-  const topSideBarRef = useRef();
   const [height, setHeight] = useState(0);
+  const topSideBarRef = useRef();
 
   useEffect(() => {
     if (topSideBarRef.current) {
