@@ -16,6 +16,23 @@ const Dashboard = ({ signOutHandler }) => {
       .child('name');
     try {
       await userNicknameRef.set(newData);
+
+      // ni return Promise
+      const getMessage = await database
+        .ref('/messages')
+        .orderByChild('/author/uid')
+        .equalTo(profile.uid)
+        .once('value');
+
+      const getRooms = await database
+        .ref('/rooms')
+        .orderByChild('/lastMessage/author/uid')
+        .equalTo(profile.uid)
+        .once('value');
+
+      console.log('Message Snap 2', getMessage);
+      console.log('Room Snap 2', getRooms);
+
       Alert.info('Nickname Has Been Updated', 4000);
     } catch (error) {
       Alert.error(error.message, 4000);
