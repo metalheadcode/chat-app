@@ -7,6 +7,7 @@ import { database } from '../../../misc/firebase';
 
 const ChatBottom = () => {
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { profile } = useProfile();
   const { chatId } = useParams();
 
@@ -15,8 +16,10 @@ const ChatBottom = () => {
   }, []);
 
   const onSendClick = async () => {
+    setIsLoading(true);
     if (input) {
       const chatRef = database.ref('messages');
+      const roomsRef = database.ref('rooms');
       const messageId = chatRef.push().key;
       const newChat = {
         author: {
@@ -31,10 +34,27 @@ const ChatBottom = () => {
       };
 
       try {
+        // save for chat
         await chatRef.child(messageId).update(newChat);
+        // save for lastMessage
+        await roomsRef
+          .child(chatId)
+          .child('lastMessage')
+          .update({ ...newChat, roomId: chatId });
+        setInput('');
+        setIsLoading(false);
       } catch (error) {
+        setInput('');
+        setIsLoading(false);
         Alert.error(error.message, 4000);
       }
+    }
+  };
+
+  const onKeyDownHandler = event => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      onSendClick();
     }
   };
 
@@ -45,11 +65,13 @@ const ChatBottom = () => {
           placeholder="Write a new message here..."
           value={input}
           onChange={onChangeInput}
+          onKeyDown={onKeyDownHandler}
         />
         <InputGroup.Button
           color="blue"
           appearance="primary"
           onClick={onSendClick}
+          disabled={isLoading}
         >
           <Icon icon="send" />
         </InputGroup.Button>
