@@ -32,6 +32,7 @@ const Dashboard = ({ signOutHandler }) => {
 
       console.log('Message Snap 2', getMessage);
       console.log('Room Snap 2', getRooms);
+      console.log('test token');
 
       Alert.info('Nickname Has Been Updated', 4000);
     } catch (error) {
