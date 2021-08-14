@@ -2,6 +2,7 @@ import React from 'react';
 import { Alert, Button, Divider, Drawer } from 'rsuite';
 import { useProfile } from '../../context/profile.context';
 import { database } from '../../misc/firebase';
+// import { getUserUpdates } from '../../misc/helpers';
 import EditableInput from '../EditableInput';
 import AvatarUploadBtn from './AvatarUploadBtn';
 import ProviderBlock from './ProviderBlock';
@@ -10,29 +11,38 @@ const Dashboard = ({ signOutHandler }) => {
   const { profile } = useProfile();
 
   const onSave = async newData => {
-    const userNicknameRef = database
-      .ref('profiles')
-      .child(profile.uid)
-      .child('name');
     try {
-      await userNicknameRef.set(newData);
+      // const update = await getUserUpdates(profile.uid, newData, database);
+      // await database.ref().update(update);
 
-      // ni return Promise
-      const getMessage = await database
+      await database.ref(`/profiles/${profile.uid}`).update({ name: newData });
+
+      const getMessageFromKey = database
         .ref('/messages')
-        .orderByChild('/author/uid')
+        .orderByChild(`author/uid`)
         .equalTo(profile.uid)
         .once('value');
 
-      const getRooms = await database
+      const getRoomsFromKey = database
         .ref('/rooms')
-        .orderByChild('/lastMessage/author/uid')
+        .orderByChild('lastMessage/author/uid')
         .equalTo(profile.uid)
         .once('value');
 
-      console.log('Message Snap 2', getMessage);
-      console.log('Room Snap 2', getRooms);
-      console.log('test token');
+      const [getMessage, getRooms] = await Promise.all([
+        getMessageFromKey,
+        getRoomsFromKey,
+      ]);
+
+      getMessage.forEach(snap =>
+        database.ref(`/messages/${snap.key}/author`).update({ name: newData })
+      );
+
+      getRooms.forEach(snap =>
+        database
+          .ref(`/rooms/${snap.key}/lastMessage/author`)
+          .update({ name: newData })
+      );
 
       Alert.info('Nickname Has Been Updated', 4000);
     } catch (error) {
