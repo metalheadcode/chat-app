@@ -11,7 +11,6 @@ export const RoomsProvider = ({ children }) => {
     const roomsRef = database.ref('rooms');
     roomsRef.on('value', snap => {
       const data = transformToArrayWithId(snap.val());
-      console.log('data from room context componentDidMount', data);
       setRooms(data);
     });
 

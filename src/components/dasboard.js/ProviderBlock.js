@@ -13,12 +13,9 @@ const ProviderBlock = () => {
     ),
   });
 
-  console.log(auth.currentUser);
-
   const unLink = async providerId => {
     try {
       if (auth.currentUser.providerData.length === 1) {
-        console.log('Fron unlink function');
         throw new Error(`You cannot disconnect from ${providerId}`);
       }
       await auth.currentUser.unlink(providerId);

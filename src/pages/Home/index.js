@@ -10,13 +10,10 @@ import Chat from './Chat';
 const Home = () => {
   // return boolean
   const isDesktop = useMediaqQueryChrome('(min-width:992px');
-  console.log('isDesktop', isDesktop);
   // return boolean
   const { isExact } = useRouteMatch('/');
-  console.log('isExact', isExact);
   // switch statement
   const switchRenderSidebar = isDesktop || isExact;
-  console.log('switchRenderSidebar', switchRenderSidebar);
 
   return (
     <RoomsProvider>

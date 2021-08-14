@@ -56,13 +56,11 @@ const AvatarUploadBtn = () => {
 
       const downloadUrl = await uploadAvatarResult.ref.getDownloadURL();
 
-      console.log('pass storage');
       await database
         .ref('profiles')
         .child(profile.uid)
         .child('avatar')
         .set(downloadUrl);
-      console.log('pass database');
       setIsLoading(false);
       Alert.info('Avatar has been uploaded', 4000);
     } catch (error) {

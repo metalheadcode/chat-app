@@ -3,7 +3,6 @@ import TimeAgo from 'timeago-react';
 import ProfileAvatar from '../dasboard.js/ProfileAvatar';
 
 const RoomItem = ({ room }) => {
-  console.log('last message obj', room);
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center">
