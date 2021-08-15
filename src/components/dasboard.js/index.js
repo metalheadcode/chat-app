@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert, Button, Divider, Drawer } from 'rsuite';
 import { useProfile } from '../../context/profile.context';
 import { database } from '../../misc/firebase';
-// import { getUserUpdates } from '../../misc/helpers';
+import { getUserUpdates } from '../../misc/helpers';
 import EditableInput from '../EditableInput';
 import AvatarUploadBtn from './AvatarUploadBtn';
 import ProviderBlock from './ProviderBlock';
@@ -12,37 +12,8 @@ const Dashboard = ({ signOutHandler }) => {
 
   const onSave = async newData => {
     try {
-      // const update = await getUserUpdates(profile.uid, newData, database);
-      // await database.ref().update(update);
-
-      await database.ref(`/profiles/${profile.uid}`).update({ name: newData });
-
-      const getMessageFromKey = database
-        .ref('/messages')
-        .orderByChild(`author/uid`)
-        .equalTo(profile.uid)
-        .once('value');
-
-      const getRoomsFromKey = database
-        .ref('/rooms')
-        .orderByChild('lastMessage/author/uid')
-        .equalTo(profile.uid)
-        .once('value');
-
-      const [getMessage, getRooms] = await Promise.all([
-        getMessageFromKey,
-        getRoomsFromKey,
-      ]);
-
-      getMessage.forEach(snap =>
-        database.ref(`/messages/${snap.key}/author`).update({ name: newData })
-      );
-
-      getRooms.forEach(snap =>
-        database
-          .ref(`/rooms/${snap.key}/lastMessage/author`)
-          .update({ name: newData })
-      );
+      const update = await getUserUpdates(profile.uid, newData, database);
+      await database.ref().update(update);
 
       Alert.info('Nickname Has Been Updated', 4000);
     } catch (error) {
