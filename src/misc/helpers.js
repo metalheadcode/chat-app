@@ -15,6 +15,13 @@ export function transformToArrayWithId(data) {
       })
     : [];
 }
+export function transformToArrayWithIdTwo(data) {
+  return data
+    ? Object.keys(data).map(roomId => {
+        return { ...data[roomId], id: roomId };
+      })
+    : [];
+}
 
 export function transformToArray(data) {
   return data ? Object.keys(data) : [];
