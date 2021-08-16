@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { database } from './firebase';
 
 export function useModalState(defaultValue = false) {
   const [isOpen, setIsOpen] = useState(defaultValue);
@@ -45,4 +46,23 @@ export function useMediaqQueryChrome(query) {
   }, [query]);
 
   return matches;
+}
+
+export function usePresence(uid) {
+  const [presence, setPresence] = useState(null);
+
+  useEffect(() => {
+    const userStatusRef = database.ref('/status').child(uid);
+    userStatusRef.on('value', snap => {
+      if (snap.exists()) {
+        setPresence(snap.val());
+      }
+    });
+
+    return () => {
+      userStatusRef.off('value');
+    };
+  }, [uid]);
+  console.log('Presence data:', presence, uid);
+  return presence;
 }
