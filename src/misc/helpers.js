@@ -27,21 +27,21 @@ export function transformToArray(data) {
   return data ? Object.keys(data) : [];
 }
 
-export async function getUserUpdates(profileId, newData, database) {
+export async function getUserUpdates(profile, newData, database) {
   const changedData = {};
 
-  changedData[`/profiles/${profileId}/name`] = newData;
+  changedData[`/profiles/${profile.uid}/name`] = newData;
 
   const getMessages = await database
     .ref('/messages')
     .orderByChild('author/uid')
-    .equalTo(profileId)
+    .equalTo(profile.uid)
     .once('value');
 
   const getRooms = await database
     .ref('/rooms')
     .orderByChild('lastMessage/author/uid')
-    .equalTo(profileId)
+    .equalTo(profile.uid)
     .once('value');
 
   getMessages.forEach(snap => {
