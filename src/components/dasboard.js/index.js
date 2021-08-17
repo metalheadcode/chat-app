@@ -12,7 +12,7 @@ const Dashboard = ({ signOutHandler }) => {
 
   const onSave = async newData => {
     try {
-      const update = await getUserUpdates(profile.uid, newData, database);
+      const update = await getUserUpdates(profile, newData, database);
       await database.ref().update(update);
 
       Alert.info('Nickname Has Been Updated', 4000);

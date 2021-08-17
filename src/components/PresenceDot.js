@@ -3,7 +3,7 @@ import { Badge, Tooltip, Whisper } from 'rsuite';
 import { usePresence } from '../misc/custom-hooks';
 
 const getText = presence => {
-  if (presence) {
+  if (!presence) {
     return 'Unknown';
   }
 
@@ -13,14 +13,14 @@ const getText = presence => {
 };
 
 const getColor = presence => {
-  if (presence) {
+  if (!presence) {
     return 'gray';
   }
   switch (presence.state) {
     case 'online':
       return 'green';
     case 'offline':
-      return 'gray';
+      return 'red';
     default:
       return 'gray';
   }
