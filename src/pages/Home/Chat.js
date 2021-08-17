@@ -27,13 +27,9 @@ const Chat = () => {
 
   return (
     <CurrentRoomProvider data={currentRoomData}>
-      <div>
+      <div className="d-flex flex-column h-100">
         <ChatTop className="chat-top" />
-      </div>
-      <div>
         <Messages className="chat-middle" />
-      </div>
-      <div>
         <ChatBottom className="chat-bottom" />
       </div>
     </CurrentRoomProvider>
