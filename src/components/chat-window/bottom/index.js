@@ -59,7 +59,7 @@ const ChatBottom = () => {
   };
 
   return (
-    <div>
+    <div style={{ paddingTop: '7px', paddingBottom: '7px' }}>
       <InputGroup>
         <Input
           placeholder="Write a new message here..."
