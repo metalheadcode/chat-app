@@ -33,10 +33,11 @@ const MessageItem = ({ message }) => {
           className="font-normal text-black-45 ml-2"
         />
         <IconBtnControl
+          {...(true ? { color: 'red' } : {})}
           isVisible
           iconName="heart"
           tooltip="Like this message"
-          onClick
+          onClick={() => console.log('test')}
           badgeContent={5}
         />
       </div>
