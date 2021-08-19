@@ -6,8 +6,8 @@ import PresenceDot from '../../PresenceDot';
 import IconBtnControl from './IconBtnControl';
 import ProfileInfoBtnModal from './ProfileInfoBtnModal';
 
-const MessageItem = ({ message }) => {
-  const { author, createdAt, text } = message;
+const MessageItem = ({ message, handleLike }) => {
+  const { author, createdAt, text, likes, likeCount } = message;
   const [selfRef, isHover] = useHover();
 
   return (
@@ -33,12 +33,12 @@ const MessageItem = ({ message }) => {
           className="font-normal text-black-45 ml-2"
         />
         <IconBtnControl
-          {...(true ? { color: 'red' } : {})}
+          {...(likes ? { color: 'red' } : {})}
           isVisible
           iconName="heart"
           tooltip="Like this message"
-          onClick={() => console.log('test')}
-          badgeContent={5}
+          onClick={() => handleLike(message.id)}
+          badgeContent={likeCount}
         />
       </div>
       <div>
