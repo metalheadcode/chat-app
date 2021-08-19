@@ -22,6 +22,7 @@ const ChatBottom = () => {
       const roomsRef = database.ref('rooms');
       const messageId = chatRef.push().key;
       const newChat = {
+        roomId: chatId,
         author: {
           ...(profile.avatar ? { avatar: profile.avatar } : {}),
           createdAt: profile.createdAt,
@@ -29,7 +30,7 @@ const ChatBottom = () => {
           uid: profile.uid,
         },
         createdAt: firebase.database.ServerValue.TIMESTAMP,
-        roomId: chatId,
+        likeCount: 0,
         text: input,
       };
 
