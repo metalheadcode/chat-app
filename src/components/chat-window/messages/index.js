@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { database } from '../../../misc/firebase';
+import { Alert } from 'rsuite';
+import { auth, database } from '../../../misc/firebase';
 import { transformToArrayWithIdTwo } from '../../../misc/helpers';
 import MessageItem from './MessageItem';
 
@@ -25,13 +26,47 @@ const Messages = () => {
     return () => messageRef.off('value');
   }, [chatId]);
 
-  console.log('Message Item', messages);
+  const handleLike = useCallback(async msgId => {
+    const { uid } = auth.currentUser;
+    const adminsRef = database.ref(`/messages/${msgId}`);
+    let alertMsg;
+
+    // https://firebase.google.com/docs/database/web/read-and-write#save_data_as_transactions
+    await adminsRef.transaction(msg => {
+      if (msg) {
+        if (msg.likes && msg.likes[uid]) {
+          msg.likeCount -= 1;
+          msg.likes[uid] = null;
+          alertMsg = 'Like removed';
+        } else {
+          msg.likeCount += 1;
+
+          if (!msg.likes) {
+            msg.likes = {};
+          }
+
+          msg.likes[uid] = true;
+          alertMsg = 'Like Added';
+        }
+      }
+
+      return msg;
+    });
+    // copied from firebase documentation, you can get from the link above.
+
+    Alert.info(alertMsg, 4000);
+  }, []);
+
   return (
     <ul className="msg-list custom-scroll">
       {isChatEmpty && <li>No message</li>}
       {isShowMessage &&
         messages.map(message => (
-          <MessageItem key={message.id} message={message} />
+          <MessageItem
+            key={message.id}
+            message={message}
+            handleLike={handleLike}
+          />
         ))}
     </ul>
   );
