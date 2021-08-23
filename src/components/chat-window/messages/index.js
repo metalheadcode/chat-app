@@ -26,6 +26,29 @@ const Messages = () => {
     return () => messageRef.off('value');
   }, [chatId]);
 
+  const handleAdmin = useCallback(
+    async uid => {
+      const adminRef = database.ref(`/rooms/${chatId}/admin`);
+
+      let alertMsg;
+      // https://firebase.google.com/docs/database/web/read-and-write#save_data_as_transactions
+      await adminRef.transaction(admin => {
+        if (admin) {
+          if (admin[uid]) {
+            admin[uid] = null;
+            alertMsg = 'Admin Permission Remove';
+          } else {
+            admin[uid] = true;
+            alertMsg = 'Admin Permission Granted';
+          }
+        }
+        return admin;
+      });
+      Alert.info(alertMsg, 4000);
+    },
+    [chatId]
+  );
+
   const handleLike = useCallback(async msgId => {
     const { uid } = auth.currentUser;
     const adminsRef = database.ref(`/messages/${msgId}`);
@@ -66,6 +89,7 @@ const Messages = () => {
             key={message.id}
             message={message}
             handleLike={handleLike}
+            handleAdmin={handleAdmin}
           />
         ))}
     </ul>
