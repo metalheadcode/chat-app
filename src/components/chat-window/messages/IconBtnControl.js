@@ -10,7 +10,7 @@ const IconBtnControl = ({
   iconName,
   tooltip,
   onClick,
-  badgeContent,
+  badgecontent,
   ...props
 }) => {
   return (
@@ -18,7 +18,7 @@ const IconBtnControl = ({
       className="ml-2"
       style={{ visibility: isVisible ? 'visible' : 'hidden' }}
     >
-      <ConditionalBadge condition={badgeContent}>
+      <ConditionalBadge condition={badgecontent}>
         <Whisper
           placement="top"
           delay={0}
@@ -33,7 +33,7 @@ const IconBtnControl = ({
             circle
             size="xs"
             icon={<Icon icon={iconName} />}
-            badgeContent={5}
+            badgecontent={5}
           />
         </Whisper>
       </ConditionalBadge>
