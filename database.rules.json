@@ -8,9 +8,11 @@
     },
     "rooms": {
       ".read": "auth !== null",
-      ".write": "auth !== null",
       "$room_id": {
         ".read": "auth !== null",
+        ".write": "!data.exists() || data.child('admin').child(auth.uid).val() == true"
+      },
+      "lastMessage": {
         ".write": "auth !== null"
       }
     },
