@@ -3,7 +3,7 @@ import { Button, Modal } from 'rsuite';
 import { useModalState } from '../../../misc/custom-hooks';
 import ProfileAvatar from '../../dasboard.js/ProfileAvatar';
 
-const ProfileInfoBtnModal = ({ author, ...btnProps }) => {
+const ProfileInfoBtnModal = ({ author, children, ...btnProps }) => {
   const { name, avatar, createdAt } = author;
   const { isOpen, open, close } = useModalState();
   const shortName = name.split(' ')[0];
@@ -29,6 +29,7 @@ const ProfileInfoBtnModal = ({ author, ...btnProps }) => {
           <p>Member since: {memberSince}</p>
         </Modal.Body>
         <Modal.Footer>
+          {children}
           <Button block onClick={close}>
             Close
           </Button>
