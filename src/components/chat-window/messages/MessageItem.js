@@ -1,14 +1,17 @@
 import React from 'react';
 import TimeAgo from 'timeago-react';
-import { useHover } from '../../../misc/custom-hooks';
+import { useHover, useMediaqQueryChrome } from '../../../misc/custom-hooks';
 import ProfileAvatar from '../../dasboard.js/ProfileAvatar';
 import PresenceDot from '../../PresenceDot';
 import IconBtnControl from './IconBtnControl';
 import ProfileInfoBtnModal from './ProfileInfoBtnModal';
 
-const MessageItem = ({ message, handleLike }) => {
+const MessageItem = ({ message, handleLike, handleDelete }) => {
   const { author, createdAt, text, likes, likeCount } = message;
   const [selfRef, isHover] = useHover();
+  const isAuthor = true;
+  const isMobile = useMediaqQueryChrome('(max-width: 992px)');
+  const canShowIcon = isMobile || isHover;
 
   return (
     <li
@@ -34,12 +37,21 @@ const MessageItem = ({ message, handleLike }) => {
         />
         <IconBtnControl
           {...(likes ? { color: 'red' } : {})}
-          isVisible
+          isVisible={canShowIcon}
           iconName="heart"
           tooltip="Like this message"
           onClick={() => handleLike(message.id)}
-          badgeContent={likeCount}
+          badgecontent={likeCount}
         />
+
+        {isAuthor && (
+          <IconBtnControl
+            isVisible={canShowIcon}
+            iconName="close"
+            tooltip="Delete this message"
+            onClick={() => handleDelete(message.id)}
+          />
+        )}
       </div>
       <div>
         <span className="word-breal-all">{text}</span>
