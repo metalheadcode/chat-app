@@ -12,7 +12,7 @@ import {
   Schema,
 } from 'rsuite';
 import { useModalState } from '../misc/custom-hooks';
-import { database } from '../misc/firebase';
+import { auth, database } from '../misc/firebase';
 
 const { StringType } = Schema.Types;
 const model = Schema.Model({
@@ -37,25 +37,33 @@ const CreateRoomBtnModal = () => {
 
   const onSubmit = async () => {
     if (formRef.current.check()) {
-      setIsLoading(true);
+      return;
+    }
 
-      try {
-        const databaseRef = database.ref('rooms');
-        const roomId = databaseRef.push().key;
-        const newRoomData = {
-          ...formValue,
-          id: roomId,
-          createdAt: firebase.database.ServerValue.TIMESTAMP,
-        };
-        await databaseRef.child(roomId).update(newRoomData);
-        Alert.info(`${formValue.name} was created`, 4000);
-        setFormValue(initialForm);
-        setIsLoading(false);
-        close();
-      } catch (error) {
-        setIsLoading(false);
-        Alert.error(error.message, 4000);
-      }
+    setIsLoading(true);
+
+    const databaseRef = database.ref('rooms');
+
+    const roomId = databaseRef.push().key;
+
+    const newRoomData = {
+      ...formValue,
+      id: roomId,
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      admin: {
+        [auth.currentUser.uid]: true,
+      },
+    };
+
+    try {
+      await databaseRef.child(roomId).update(newRoomData);
+      Alert.info(`${formValue.name} was created`, 4000);
+      setFormValue(initialForm);
+      setIsLoading(false);
+      close();
+    } catch (error) {
+      setIsLoading(false);
+      Alert.error(error.message, 4000);
     }
   };
 
