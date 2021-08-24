@@ -82,6 +82,7 @@ const Messages = () => {
 
   const handleDelete = useCallback(
     async msgId => {
+      // eslint-disable-next-line
       if (!window.confirm('Delete this message?')) {
         return;
       }
