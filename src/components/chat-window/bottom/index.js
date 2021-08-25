@@ -3,7 +3,8 @@ import firebase from 'firebase/app';
 import { Alert, Icon, Input, InputGroup } from 'rsuite';
 import { useParams } from 'react-router-dom';
 import { useProfile } from '../../../context/profile.context';
-import { database } from '../../../misc/firebase';
+import { database, storage } from '../../../misc/firebase';
+import AttachmentBtnModal from './AttachmentBtnModal';
 
 const ChatBottom = () => {
   const [input, setInput] = useState('');
@@ -59,9 +60,28 @@ const ChatBottom = () => {
     }
   };
 
+  // const afterUpload = useCallback(files => {
+  //   setIsLoading(true);
+
+  //   const updates = {};
+
+  //   files.forEach(file => {
+  //     const msgData = assembleMessage(profile, chatId);
+  //     msgData.file = input
+
+  //     const messageId = database.ref('/messages').push().key;
+
+  //     updates
+  //   })
+
+  //   storage.ref(`/chat/${chatId}`).update(updates);
+
+  // }, []);
+
   return (
     <div style={{ paddingTop: '7px', paddingBottom: '7px' }}>
       <InputGroup>
+        <AttachmentBtnModal />
         <Input
           placeholder="Write a new message here..."
           value={input}
